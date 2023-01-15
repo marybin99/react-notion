@@ -1,23 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
 
+import "react-notion/src/styles.css";
+import "prismjs/themes/prism-tomorrow.css";
+import { NotionRenderer } from "react-notion";
+
+import React, { useState, useEffect } from "react";
+
 function App() {
+  const [response, setResponse] = useState({});
+
+  useEffect(() => {
+    const NOTION_PAGE_ID = 'Jira-f0a58af0975141848f364b86aa33ce61';
+    fetch(`https://notion-api.splitbee.io/v1/page/${NOTION_PAGE_ID}`)
+      .then(res => res.json())
+      .then((resJson) => {
+        setResponse(resJson);
+      });
+  }, [])
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NotionRenderer blockMap={response} fullPage={true}/>
     </div>
   );
 }
